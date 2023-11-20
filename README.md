@@ -1,39 +1,64 @@
 ## Table of Contents
 
-- [{{ cookiecutter.project_name }}](#{{ cookiecutter.project_name }})
-  - [Table of Contents](#table-of-contents)
-  - [Características](#características)
-  - [Docker](#docker)
-    - [Construir (build) la imagen](#construir-build-la-imagen)
-    - [Lanzar (run) la imagen](#lanzar-run-la-imagen)
-    - [Parar (stop) el contenedor Docker](#parar-stop-el-contenedor-docker)
-  - [Instalación y uso sin Docker](#instalación-y-uso)
-    - [Instalar Python](#instalar-python)
-    - [Instalar Pip](#instalar-pip)
-    - [Instalar Pyenv](#instalar-pyenv)
-    - [Instalar Poetry](#instalar-poetry)
-    - [Instalar el proyecto](#instalar-el-proyecto)
-    - [Ejecutar los tests](#ejecutar-los-tests)
-    - [Ejecutar el servidor](#ejecutar-el-servidor)
-  - [Documentación](#documentación)
-  - [Construido con](#construido-con)
+<!-- TOC -->
+
+- [Table of Contents](#table-of-contents)
+- [Instalación y uso](#instalación-y-uso)
+  - [Descarga o clona el proyecto](#descarga-o-clona-el-proyecto)
+  - [Instalar Pyenv](#instalar-pyenv)
+  - [Instalar Poetry](#instalar-poetry)
+  - [Instalar el proyecto](#instalar-el-proyecto)
+  - [Ejecutar los tests](#ejecutar-los-tests)
+  - [Ejecutar el servidor](#ejecutar-el-servidor)
+  - [Ejecutar herramientas de análisis estático](#ejecutar-herramientas-de-análisis-estático)
+- [Docker](#docker)
+  - [Construir (build) la imagen y los servicios web y db](#construir-build-la-imagen-y-los-servicios-web-y-db)
+  - [Parar (stop) los servicios](#parar-stop-los-servicios)
+  - [Parar iniciar (start) los servicios](#parar-iniciar-start-los-servicios)
+  - [Ejecutar los tests](#ejecutar-los-tests-1)
+- [Documentación](#documentación)
+- [Construido con](#construido-con)
+
+<!-- /TOC -->
 
 
 
 ## Instalación y uso
 
-Estas instrucciones te ayudarán a tenr una copia del proyecto en marcha en tu
+Estas instrucciones te ayudarán a tener una copia del proyecto en marcha en tu
 máquina local para fines de desarrollo y pruebas. 
 
 Necesitas una instalación de Python 3.11.4 funcionando, con Pip instalado.
 
+Estas intrucciones han sido redactadas para instalar el proyecto en sistemas Linux, aunque pueden adaptarse los comandos de forma muy sencilla a entornos Mac.
+
+Para entornos de desarrollo y pruebas Windows, consultar los comendos equivalentes en Internet.
+
 <br/>
+
+### Descarga o clona el proyecto
+
+Puedes descargarte o clonar el proyecto desde su [repositorio en GitHub](https://github.com/Lucsat/Beer-Tap-Dispenser). 
+
+Para clonar el proyecto, utiliza el siguiente comando:
+
+```console
+git clone https://github.com/Lucsat/Beer-Tap-Dispenser.git
+```
+
+Si, por el contrario, te has descargado el fichero zomprimido con el proyecto, descomprímelo en tu unidad de disco local.
+
+Una vez clonado, o descargado y descomprimido, entra en el directorio raíz del proyecto:
+
+```console
+cd Beer-Tap-Dispenser
+```
 
 ### Instalar Pyenv
 
 Instala [pyenv](https://github.com/pyenv/pyenv) y el plugin [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv), para poder crear un entorno virtual para el proyecto.
 
-Una vez instalados, es hora de crear el entorno virtual. En nuestro caso, vamos a tuilizar Python 3.11.4:
+Una vez instalados, es hora de crear el entorno virtual. En nuestro caso, vamos a utilizar Python 3.11.4:
 
 ```console
 $ pyenv virtualenv 3.11.4 beer-tap-dispenser
@@ -44,6 +69,8 @@ Entra dentro del entorno virtual de Python que acabamos de crear:
 ```console
 $ pyenv activate beer-tap-dispenser
 ```
+
+Asegúrate que te encuentras en el directorio raíz del proyecto.
 
 Actualiza los paquetes `pip/setuptools`:
 
@@ -74,7 +101,6 @@ Para ello utilizaremos Poetry y el fichero `pyproject.toml` (PEP517), incluído 
 Inicia la instalación de las dependencias utilizando el comando `poetry`:
 
 ```console
-$ cd Beer\ Tap\ Dispenser
 $ poetry install
 ```
 
@@ -104,9 +130,26 @@ Una vez creada la variable, puedes lanzar el servidor ASGI [Uvicorn](https://www
 uvicorn app.main:app --port 8000 --reload
 ```
 
+### Ejecutar herramientas de análisis estático
 
+Se han utilizado las siguientes herramientas para el análisis estático de código:
 
+* [Flake8](https://flake8.pycqa.org/en/latest/) - Análisis de estilo de codificación.
+* [isort](https://pypi.org/project/isort/) - Organización de imports.
+* [Black](https://pypi.org/project/black/) - Análisis de formato del código.
+* [MyPy](https://www.mypy-lang.org/) - Static type checker.
 
+Puedes comprobar el resultado de MyPy, Flake8, y Black, mediante los siguientes comandos:
+
+```console
+poetry run mypy app tests
+```
+```console
+poetry run flake8 app tests
+```
+```console
+poetry run black app tests
+```
 
 ## Docker
 
@@ -145,9 +188,6 @@ Para ejecurar los tests del projecto en el servicio `web`, debes invocar el coma
 ```console
 docker-compose exec web poetry run pytest --cov --cov-report=xml .
 ```
-
-
-
 
 ## Documentación
 
